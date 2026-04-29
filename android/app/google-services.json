@@ -1,0 +1,8 @@
+14.2 Archivo a agregar cuando Firebase lo genere
+
+Firebase te dará este archivo:
+
+APP_MOVIL_POLITICAS/android/app/google-services.json
+
+Ese archivo no se inventa.
+Debe salir de tu proyecto real de Firebase.
