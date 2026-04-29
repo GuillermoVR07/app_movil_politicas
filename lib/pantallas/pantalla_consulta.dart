@@ -38,16 +38,9 @@ class _PantallaConsultaState extends State<PantallaConsulta> {
       mensaje = '';
     });
 
+    await registrarTokenSinBloquearConsulta(identificacion);
+
     try {
-      final String? token = ServicioNotificacion.obtenerToken();
-
-      if (token != null && token.isNotEmpty) {
-        await servicioCliente.registrarToken(
-          identificacionCiudadano: identificacion,
-          tokenNotificacionMovil: token,
-        );
-      }
-
       final List<Tramite> tramites = await servicioTramite
           .buscarTramitesPorCiudadano(identificacion);
 
@@ -62,6 +55,10 @@ class _PantallaConsultaState extends State<PantallaConsulta> {
         return;
       }
 
+      setState(() {
+        cargando = false;
+      });
+
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -71,15 +68,36 @@ class _PantallaConsultaState extends State<PantallaConsulta> {
           ),
         ),
       );
+    } catch (error) {
+      if (!mounted) return;
 
       setState(() {
         cargando = false;
+        mensaje =
+            'No se pudo consultar el trámite. Verifique que el backend esté activo y que la identificación sea correcta.';
       });
+    }
+  }
+
+  Future<void> registrarTokenSinBloquearConsulta(String identificacion) async {
+    try {
+      final String? token = ServicioNotificacion.obtenerToken();
+
+      if (token == null || token.isEmpty) {
+        debugPrint('No hay token FCM disponible todavía.');
+        return;
+      }
+
+      await servicioCliente.registrarToken(
+        identificacionCiudadano: identificacion,
+        tokenNotificacionMovil: token,
+      );
+
+      debugPrint('Token registrado correctamente para $identificacion.');
     } catch (error) {
-      setState(() {
-        cargando = false;
-        mensaje = 'No se pudo consultar el trámite. Verifique la conexión.';
-      });
+      debugPrint(
+        'No se pudo registrar el token, pero se continuará con la consulta: $error',
+      );
     }
   }
 
@@ -122,7 +140,11 @@ class _PantallaConsultaState extends State<PantallaConsulta> {
               child: FilledButton(
                 onPressed: cargando ? null : consultarTramites,
                 child: cargando
-                    ? const CircularProgressIndicator()
+                    ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
                     : const Text('Consultar trámites'),
               ),
             ),
