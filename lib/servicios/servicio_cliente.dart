@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ServicioCliente {
-  static const String urlBase = 'http://10.0.2.2:8080/api';
+  static const String urlBase = 'http://localhost:8080/api';
 
   Future<void> registrarToken({
     required String identificacionCiudadano,
@@ -12,9 +12,7 @@ class ServicioCliente {
 
     await http.post(
       url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'identificacionCiudadano': identificacionCiudadano,
         'tokenNotificacionMovil': tokenNotificacionMovil,

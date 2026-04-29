@@ -1,8 +1,29 @@
-14.2 Archivo a agregar cuando Firebase lo genere
-
-Firebase te dará este archivo:
-
-APP_MOVIL_POLITICAS/android/app/google-services.json
-
-Ese archivo no se inventa.
-Debe salir de tu proyecto real de Firebase.
+{
+  "project_info": {
+    "project_number": "285313536639",
+    "project_id": "app-movil-politicas",
+    "storage_bucket": "app-movil-politicas.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285313536639:android:0e1624e8e94aed81ab254a",
+        "android_client_info": {
+          "package_name": "com.example.app_movil_politicas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8UTKsVzkBWGHz7czz9NwnB_9ksyIopb0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
