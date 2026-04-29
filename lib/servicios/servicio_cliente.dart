@@ -1,8 +1,11 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
+import '../configuracion/configuracion_api.dart';
+
 class ServicioCliente {
-  static const String urlBase = 'http://localhost:8080/api';
+  static const String urlBase = ConfiguracionApi.urlBase;
 
   Future<void> registrarToken({
     required String identificacionCiudadano,
@@ -10,7 +13,7 @@ class ServicioCliente {
   }) async {
     final url = Uri.parse('$urlBase/clientes/registrar-token');
 
-    await http.post(
+    final respuesta = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
@@ -18,5 +21,9 @@ class ServicioCliente {
         'tokenNotificacionMovil': tokenNotificacionMovil,
       }),
     );
+
+    if (respuesta.statusCode != 200) {
+      throw Exception('No se pudo registrar el token de notificación.');
+    }
   }
 }

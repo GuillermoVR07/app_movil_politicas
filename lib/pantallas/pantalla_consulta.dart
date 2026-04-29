@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../modelos/tramite.dart';
+import '../servicios/servicio_cliente.dart';
+import '../servicios/servicio_notificacion.dart';
 import '../servicios/servicio_tramite.dart';
 import 'pantalla_lista_tramites.dart';
 
@@ -15,6 +18,7 @@ class _PantallaConsultaState extends State<PantallaConsulta> {
       TextEditingController();
 
   final ServicioTramite servicioTramite = ServicioTramite();
+  final ServicioCliente servicioCliente = ServicioCliente();
 
   bool cargando = false;
   String mensaje = '';
@@ -35,14 +39,24 @@ class _PantallaConsultaState extends State<PantallaConsulta> {
     });
 
     try {
-      final List<Tramite> tramites =
-          await servicioTramite.buscarTramitesPorCiudadano(identificacion);
+      final String? token = ServicioNotificacion.obtenerToken();
+
+      if (token != null && token.isNotEmpty) {
+        await servicioCliente.registrarToken(
+          identificacionCiudadano: identificacion,
+          tokenNotificacionMovil: token,
+        );
+      }
+
+      final List<Tramite> tramites = await servicioTramite
+          .buscarTramitesPorCiudadano(identificacion);
 
       if (!mounted) return;
 
       if (tramites.isEmpty) {
         setState(() {
-          mensaje = 'No se encontraron trámites asociados a esta identificación.';
+          mensaje =
+              'No se encontraron trámites asociados a esta identificación.';
           cargando = false;
         });
         return;
@@ -78,24 +92,16 @@ class _PantallaConsultaState extends State<PantallaConsulta> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('APP_MOVIL_POLITICAS'),
-      ),
+      appBar: AppBar(title: const Text('APP_MOVIL_POLITICAS')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const Icon(
-              Icons.assignment,
-              size: 80,
-            ),
+            const Icon(Icons.assignment, size: 80),
             const SizedBox(height: 16),
             const Text(
               'Consulta de trámites',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             const Text(
@@ -121,11 +127,7 @@ class _PantallaConsultaState extends State<PantallaConsulta> {
               ),
             ),
             const SizedBox(height: 16),
-            if (mensaje.isNotEmpty)
-              Text(
-                mensaje,
-                textAlign: TextAlign.center,
-              ),
+            if (mensaje.isNotEmpty) Text(mensaje, textAlign: TextAlign.center),
           ],
         ),
       ),

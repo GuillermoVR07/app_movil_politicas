@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'pantallas/pantalla_consulta.dart';
 import 'servicios/servicio_notificacion.dart';
 
@@ -18,10 +19,7 @@ class AplicacionPoliticas extends StatelessWidget {
     return MaterialApp(
       title: 'APP_MOVIL_POLITICAS',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorSchemeSeed: Colors.blue,
-        useMaterial3: true,
-      ),
+      theme: ThemeData(colorSchemeSeed: Colors.blue, useMaterial3: true),
       home: const PantallaConsulta(),
     );
   }
